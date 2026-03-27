@@ -1,0 +1,27 @@
+<Project Sdk="WixToolset.Sdk/4.0.5">
+
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <Platform>x64</Platform>
+    <OutputName>PSRemoteAdmin-$(Version)-Setup</OutputName>
+    <!-- Default version for local builds; overridden by CI via -p:Version=x.y.z -->
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <!-- Path to the published app output; override with -p:AppPublishDir=... -->
+    <AppPublishDir Condition="'$(AppPublishDir)' == ''">$(MSBuildThisFileDirectory)..\..\publish\</AppPublishDir>
+    <DefineConstants>Version=$(Version)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.5" />
+  </ItemGroup>
+
+  <!-- Harvest all published files into the install directory -->
+  <ItemGroup>
+    <HarvestDirectory Include="$(AppPublishDir)">
+      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <ComponentGroupName>AppFiles</ComponentGroupName>
+    </HarvestDirectory>
+  </ItemGroup>
+
+</Project>

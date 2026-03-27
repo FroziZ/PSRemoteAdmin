@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish self-contained executable
+        run: |
+          dotnet publish src/PSRemoteAdmin/PSRemoteAdmin.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:Version=${{ steps.version.outputs.VERSION }} `
+            -o publish/
+
+      - name: Install WiX toolset
+        run: dotnet tool install --global wix
+
+      - name: Build MSI
+        run: |
+          dotnet build src/PSRemoteAdmin.Setup/PSRemoteAdmin.Setup.wixproj `
+            -c Release `
+            -p:Version=${{ steps.version.outputs.VERSION }} `
+            -p:AppPublishDir=${{ github.workspace }}/publish/
+
+      - name: Locate MSI
+        id: msi
+        shell: bash
+        run: |
+          MSI=$(find src/PSRemoteAdmin.Setup/bin -name "*.msi" | head -1)
+          echo "PATH=$MSI" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: PSRemoteAdmin ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            publish/PSRemoteAdmin.exe
+            ${{ steps.msi.outputs.PATH }}
