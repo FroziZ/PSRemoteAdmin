@@ -2,7 +2,6 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PSRemoteAdmin.Core.Models;
 
 namespace PSRemoteAdmin.Core.Services;
@@ -12,12 +11,12 @@ public class MachineStatusService : IMachineStatusService
     private const int MaxConcurrentProbes = 50;
     private const int ProbeTimeoutMs = 3000;
 
-    private readonly IOptions<AppSettings> _options;
+    private readonly AppSettings _settings;
     private readonly ILogger<MachineStatusService> _logger;
 
-    public MachineStatusService(IOptions<AppSettings> options, ILogger<MachineStatusService> logger)
+    public MachineStatusService(AppSettings settings, ILogger<MachineStatusService> logger)
     {
-        _options = options;
+        _settings = settings;
         _logger = logger;
     }
 
@@ -25,7 +24,7 @@ public class MachineStatusService : IMachineStatusService
         IReadOnlyList<MachineTarget> machines,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var port = _options.Value.WinRmPort;
+        var port = _settings.WinRmPort;
         var semaphore = new SemaphoreSlim(MaxConcurrentProbes);
         var channel = Channel.CreateUnbounded<(string, OnlineStatus)>();
 

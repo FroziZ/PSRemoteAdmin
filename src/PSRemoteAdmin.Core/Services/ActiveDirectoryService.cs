@@ -1,6 +1,5 @@
 using System.DirectoryServices;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PSRemoteAdmin.Core.Exceptions;
 using PSRemoteAdmin.Core.Models;
 
@@ -8,17 +7,17 @@ namespace PSRemoteAdmin.Core.Services;
 
 public class ActiveDirectoryService : IActiveDirectoryService
 {
-    private readonly IOptions<AppSettings> _options;
+    private readonly AppSettings _settings;
     private readonly ILogger<ActiveDirectoryService> _logger;
 
-    public ActiveDirectoryService(IOptions<AppSettings> options, ILogger<ActiveDirectoryService> logger)
+    public ActiveDirectoryService(AppSettings settings, ILogger<ActiveDirectoryService> logger)
     {
-        _options = options;
+        _settings = settings;
         _logger = logger;
     }
 
     public Task<IReadOnlyList<AdNode>> GetRootNodesAsync() =>
-        GetChildrenInternalAsync(_options.Value.LdapConnectionString);
+        GetChildrenInternalAsync(_settings.LdapConnectionString);
 
     public Task<IReadOnlyList<AdNode>> GetChildrenAsync(string distinguishedName) =>
         GetChildrenInternalAsync($"LDAP://{distinguishedName}");

@@ -3,19 +3,18 @@ using System.Management.Automation.Runspaces;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PSRemoteAdmin.Core.Models;
 
 namespace PSRemoteAdmin.Core.Services;
 
 public class RemoteExecutionService : IRemoteExecutionService
 {
-    private readonly IOptions<AppSettings> _options;
+    private readonly AppSettings _settings;
     private readonly ILogger<RemoteExecutionService> _logger;
 
-    public RemoteExecutionService(IOptions<AppSettings> options, ILogger<RemoteExecutionService> logger)
+    public RemoteExecutionService(AppSettings settings, ILogger<RemoteExecutionService> logger)
     {
-        _options = options;
+        _settings = settings;
         _logger = logger;
     }
 
@@ -139,7 +138,7 @@ public class RemoteExecutionService : IRemoteExecutionService
     private WSManConnectionInfo BuildConnectionInfo(MachineTarget machine, PSCredential? credential)
     {
         var host = machine.DnsHostName ?? machine.Name;
-        var port = _options.Value.WinRmPort;
+        var port = _settings.WinRmPort;
         var info = new WSManConnectionInfo(new Uri($"http://{host}:{port}/wsman"));
         if (credential != null)
             info.Credential = credential;
