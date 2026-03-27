@@ -22,6 +22,7 @@ public partial class SettingsWindow : Window
         foreach (char c in PasswordBox.Password)
             secure.AppendChar(c);
         secure.MakeReadOnly();
+        _vm.RunAsPassword?.Dispose();
         _vm.RunAsPassword = secure;
         _vm.PasswordChanged = true;
     }

@@ -52,6 +52,8 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync(Window window)
     {
+        var previousUsername = _current.RunAsUsername;
+
         _current.LdapConnectionString = LdapConnectionString;
         _current.Domain = Domain;
         _current.WinRmPort = WinRmPort;
@@ -66,8 +68,8 @@ public partial class SettingsViewModel : ObservableObject
         }
         else if (string.IsNullOrWhiteSpace(RunAsUsername))
         {
-            if (_current.RunAsUsername != null)
-                _credentialService.ClearPassword(_current.RunAsUsername);
+            if (previousUsername != null)
+                _credentialService.ClearPassword(previousUsername);
         }
 
         window.DialogResult = true;
@@ -96,6 +98,11 @@ public partial class SettingsViewModel : ObservableObject
         catch (ActiveDirectoryServiceException ex)
         {
             ConnectionTestMessage = $"❌  {ex.Message}";
+            ConnectionTestSuccess = false;
+        }
+        catch (Exception ex)
+        {
+            ConnectionTestMessage = $"❌  Unexpected error: {ex.Message}";
             ConnectionTestSuccess = false;
         }
         finally
