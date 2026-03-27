@@ -100,16 +100,35 @@
     </Style>
 
     <!-- Accent button (Execute) -->
-    <Style x:Key="AccentButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background"  Value="{StaticResource AccentBrush}"/>
-        <Setter Property="Foreground"  Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background"  Value="{StaticResource AccentHoverBrush}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource AccentHoverBrush}"/>
-            </Trigger>
-        </Style.Triggers>
+    <Style x:Key="AccentButtonStyle" TargetType="Button">
+        <Setter Property="Background"       Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground"       Value="White"/>
+        <Setter Property="BorderBrush"      Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderThickness"  Value="1"/>
+        <Setter Property="Padding"          Value="12,6"/>
+        <Setter Property="Cursor"           Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background"  Value="{StaticResource AccentHoverBrush}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource AccentHoverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ===== ListBox ===== -->
