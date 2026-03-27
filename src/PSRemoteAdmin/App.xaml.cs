@@ -14,6 +14,8 @@ public partial class App : Application
 {
     private IHost? _host;
 
+    public static IServiceProvider Services { get; private set; } = null!;
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -55,7 +57,12 @@ public partial class App : Application
 
                     // ViewModels
                     services.AddTransient<MainViewModel>();
-                    services.AddTransient<SettingsViewModel>();
+                    services.AddTransient<SettingsViewModel>(sp =>
+                        new SettingsViewModel(
+                            sp.GetRequiredService<AppSettingsProvider>(),
+                            sp.GetRequiredService<CredentialService>(),
+                            sp.GetRequiredService<IActiveDirectoryService>(),
+                            sp.GetRequiredService<AppSettings>()));
 
                     // Windows
                     // StartupUri is intentionally absent; window is opened here via DI
@@ -65,6 +72,8 @@ public partial class App : Application
                 .Build();
 
             await _host.StartAsync();
+
+            Services = _host.Services;
 
             var mainWindow = _host.Services.GetRequiredService<Views.MainWindow>();
             mainWindow.Show();
