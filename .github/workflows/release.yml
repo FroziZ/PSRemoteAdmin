@@ -40,8 +40,7 @@ jobs:
         run: |
           dotnet build src/PSRemoteAdmin.Setup/PSRemoteAdmin.Setup.wixproj `
             -c Release `
-            -p:Version=${{ steps.version.outputs.VERSION }} `
-            "-p:AppPublishDir=${{ github.workspace }}\publish\"
+            -p:Version=${{ steps.version.outputs.VERSION }}
 
       - name: Locate MSI
         id: msi
