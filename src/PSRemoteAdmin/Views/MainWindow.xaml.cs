@@ -27,6 +27,8 @@ public partial class MainWindow : Window
         Loaded += async (_, _) => await viewModel.InitializeAsync();
     }
 
+    // e.OriginalSource identifies the specific TreeViewItem that expanded (not sender=TreeView).
+    // e.Handled=true prevents parent TreeViewItems from also firing this handler as the event bubbles.
     private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
     {
         if (e.OriginalSource is TreeViewItem { DataContext: AdTreeNodeViewModel nodeVm })

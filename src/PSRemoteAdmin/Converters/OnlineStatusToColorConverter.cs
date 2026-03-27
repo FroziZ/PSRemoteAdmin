@@ -10,7 +10,9 @@ public class OnlineStatusToColorConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return (OnlineStatus)value switch
+        if (value is not OnlineStatus status)
+            return new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B)); // Unknown color fallback
+        return status switch
         {
             OnlineStatus.Online   => new SolidColorBrush(Color.FromRgb(0x22, 0xC5, 0x5E)),
             OnlineStatus.Offline  => new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)),

@@ -286,7 +286,6 @@
                         DockPanel.Dock="Right"
                         Style="{StaticResource AccentButtonStyle}"
                         Command="{Binding ExecuteCommand}"
-                        IsEnabled="{Binding IsExecuting, Converter={StaticResource InverseBoolConverter}}"
                         MinWidth="140"/>
                 <TextBlock/>
             </DockPanel>

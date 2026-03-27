@@ -20,7 +20,7 @@ public partial class ExecutionResultViewModel : ObservableObject
     public string StatusIcon => IsSuccess ? "✅" : "❌";
     public string Summary => IsSuccess
         ? $"exit:{ExitCodeDisplay}  {FormattedDuration}  [{FormattedTimestamp}]"
-        : $"exit:{ExitCodeDisplay}  {FormattedDuration}  [{FormattedTimestamp}]";
+        : $"exit:{ExitCodeDisplay}  errors  {FormattedDuration}  [{FormattedTimestamp}]";
 
     [ObservableProperty] private bool _isExpanded;
 
