@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:PSRemoteAdmin.Converters">
 
     <!-- ===== Color Palette ===== -->
     <Color x:Key="BackgroundColor">#FF111318</Color>
@@ -216,5 +217,15 @@
     <Style TargetType="Separator">
         <Setter Property="Background" Value="{StaticResource BorderBrush}"/>
     </Style>
+
+
+    <!-- ===== Converters ===== -->
+    <converters:OnlineStatusToColorConverter  x:Key="StatusToColorConverter"/>
+    <converters:OnlineStatusToIconConverter   x:Key="StatusToIconConverter"/>
+    <converters:BoolToVisibilityConverter     x:Key="BoolToVisibilityConverter"/>
+    <converters:InverseBoolConverter          x:Key="InverseBoolConverter"/>
+    <converters:NullToVisibilityConverter     x:Key="NullToVisibilityConverter"/>
+    <converters:ExitCodeToStringConverter     x:Key="ExitCodeToStringConverter"/>
+    <converters:CommandModeToReadOnlyConverter x:Key="CommandModeToReadOnlyConverter"/>
 
 </ResourceDictionary>
