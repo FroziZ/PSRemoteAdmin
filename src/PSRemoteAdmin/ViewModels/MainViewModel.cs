@@ -254,15 +254,23 @@ public partial class MainViewModel : ObservableObject
     private void ScheduleStatusCheck()
     {
         _statusDebounceTimer?.Dispose();
-        _statusDebounceTimer = new Timer(async _ => await RunStatusCheckAsync(), null,
-            TimeSpan.FromMilliseconds(500), Timeout.InfiniteTimeSpan);
+        // Note: Disposing the old timer does not stop an already-fired callback.
+        // The _statusCts local-capture pattern in RunStatusCheckAsync is the intended
+        // mitigation — each invocation operates on its own captured token.
+        _statusDebounceTimer = new Timer(async _ =>
+        {
+            try { await RunStatusCheckAsync(); }
+            catch (Exception ex) { Log.Warning(ex, "Status check failed unexpectedly"); }
+        }, null, TimeSpan.FromMilliseconds(500), Timeout.InfiniteTimeSpan);
     }
 
     private async Task RunStatusCheckAsync()
     {
-        _statusCts?.Cancel();
+        var old = _statusCts;
         _statusCts = new CancellationTokenSource();
         var cts = _statusCts;
+        old?.Cancel();
+        old?.Dispose();
 
         var targets = Application.Current.Dispatcher.Invoke(
             () => TargetMachines.Select(m => m.Target).ToList());
