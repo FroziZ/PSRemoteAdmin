@@ -15,11 +15,11 @@ public partial class ExecutionResultViewModel : ObservableObject
     public string ExitCodeDisplay => Result.ExitCode.HasValue ? Result.ExitCode.Value.ToString() : "N/A";
     public string FormattedTimestamp => Result.Timestamp.ToString("HH:mm:ss");
     public string FormattedDuration => $"{Result.Duration.TotalSeconds:F1}s";
-    public bool IsSuccess => !Result.HadErrors && Result.ExitCode == 0;
+    public bool IsSuccess => !Result.HadErrors && Result.ExitCode.HasValue && Result.ExitCode.Value == 0;
 
     public string StatusIcon => IsSuccess ? "✅" : "❌";
     public string Summary => IsSuccess
-        ? $"exit:{Result.ExitCode}  {FormattedDuration}  [{FormattedTimestamp}]"
+        ? $"exit:{ExitCodeDisplay}  {FormattedDuration}  [{FormattedTimestamp}]"
         : $"exit:{ExitCodeDisplay}  {FormattedDuration}  [{FormattedTimestamp}]";
 
     [ObservableProperty] private bool _isExpanded;
