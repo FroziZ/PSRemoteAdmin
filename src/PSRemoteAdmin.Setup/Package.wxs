@@ -29,14 +29,12 @@
 
   <!-- ===== Directory structure ===== -->
   <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFiles64Folder">
-        <Directory Id="INSTALLFOLDER" Name="PSRemoteAdmin" />
-      </Directory>
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="ShortcutsDir" Name="PSRemoteAdmin" />
-      </Directory>
-    </Directory>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="PSRemoteAdmin" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ShortcutsDir" Name="PSRemoteAdmin" />
+    </StandardDirectory>
   </Fragment>
 
   <!-- ===== Start Menu shortcut ===== -->

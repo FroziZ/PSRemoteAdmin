@@ -34,17 +34,14 @@ jobs:
             --self-contained true `
             -p:PublishSingleFile=true `
             -p:Version=${{ steps.version.outputs.VERSION }} `
-            -o publish/
-
-      - name: Install WiX toolset
-        run: dotnet tool install --global wix
+            -o publish\
 
       - name: Build MSI
         run: |
           dotnet build src/PSRemoteAdmin.Setup/PSRemoteAdmin.Setup.wixproj `
             -c Release `
             -p:Version=${{ steps.version.outputs.VERSION }} `
-            -p:AppPublishDir=${{ github.workspace }}/publish/
+            "-p:AppPublishDir=${{ github.workspace }}\publish\"
 
       - name: Locate MSI
         id: msi
